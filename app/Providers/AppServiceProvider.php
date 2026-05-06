@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
+use App\Models\MedicalDocument;
+use App\Policies\AppointmentPolicy;
+use App\Policies\MedicalDocumentPolicy;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(Appointment::class, AppointmentPolicy::class);
+        Gate::policy(MedicalDocument::class, MedicalDocumentPolicy::class);
     }
 }

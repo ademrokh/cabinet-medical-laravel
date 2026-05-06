@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MedicalDocumentController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\PdfExportController;
 use App\Http\Controllers\PlanningController;
@@ -21,8 +22,9 @@ Route::get('/', function () {
 Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('doctors.show');
 
-// Patient routes
+// Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
+
     // Dashboard
     Route::get('/dashboard', function () {
         $user = auth()->user();
@@ -39,24 +41,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('patient')->group(function () {
         Route::get('/patient/dashboard', function () {
             $patient = auth()->user();
-
+            $upcomingAppointments = $patient->appointments()
+                ->upcoming()
+                ->with('doctor.user', 'doctor.specialty')
+                ->take(5)
+                ->get();
             $upcomingCount = $patient->appointments()
                 ->upcoming()
                 ->count();
-
             $completedCount = $patient->appointments()
                 ->where('status', 'completed')
                 ->count();
-
             $documentsCount = $patient->medicalDocuments()
                 ->count();
-
-            $upcomingAppointments = $patient->appointments()
-                ->upcoming()
-                ->with('doctor.user')
-                ->take(5)
-                ->get();
-
             return view('patient.dashboard', compact('upcomingCount', 'completedCount', 'documentsCount', 'upcomingAppointments'));
         })->name('patient.dashboard');
 
@@ -65,6 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
         Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
         Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+
+        Route::get('/documents', [MedicalDocumentController::class, 'patientIndex'])->name('documents.patient');
+        Route::get('/documents/{document}', [MedicalDocumentController::class, 'show'])->name('documents.show');
+        Route::get('/documents/{document}/download', [MedicalDocumentController::class, 'download'])->name('documents.download');
     });
 
     // Doctor routes
@@ -83,11 +84,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('admin/specialties', 'SpecialtyController', ['as' => 'admin']);
     });
 
-    // Planning (doctor/admin)
+    // Planning
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
     Route::post('/planning/generate', [PlanningController::class, 'generate'])->name('planning.generate');
 
-    Route::get('/export-pdf/{type}/{id}', [PdfExportController::class, 'generatePdf'])->name('export.pdf');
+    // PDF Export
+    Route::get('/export-pdf/{type}/{id}', [PdfExportController::class, 'showExportPage'])->name('export.page');
+    Route::get('/export-pdf/{type}/{id}/summary', [PdfExportController::class, 'getSummary'])->name('export.summary');
+    Route::post('/export-pdf/{type}/{id}/download', [PdfExportController::class, 'generatePdf'])->name('export.pdf');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

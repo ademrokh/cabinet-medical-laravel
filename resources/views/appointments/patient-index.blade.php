@@ -16,17 +16,25 @@
     <!-- Tabs -->
     <div class="mb-8 border-b border-gray-200 dark:border-gray-700">
         <div class="flex space-x-8">
-            <a href="?status=&" class="px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600">
+            <a href="{{ route('appointments.patient') }}"
+               class="px-4 py-2 font-medium @if(!$status) text-indigo-600 border-b-2 border-indigo-600 @else text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 @endif">
                 Tous
             </a>
-            <a href="?status=pending" class="px-4 py-2 font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300">
-                En attente
+            <a href="{{ route('appointments.patient', ['status' => 'scheduled']) }}"
+               class="px-4 py-2 font-medium @if($status === 'scheduled') text-indigo-600 border-b-2 border-indigo-600 @else text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 @endif">
+                À venir
             </a>
-            <a href="?status=confirmed" class="px-4 py-2 font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300">
+            <a href="{{ route('appointments.patient', ['status' => 'confirmed']) }}"
+               class="px-4 py-2 font-medium @if($status === 'confirmed') text-indigo-600 border-b-2 border-indigo-600 @else text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 @endif">
                 Confirmés
             </a>
-            <a href="?status=completed" class="px-4 py-2 font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300">
+            <a href="{{ route('appointments.patient', ['status' => 'completed']) }}"
+               class="px-4 py-2 font-medium @if($status === 'completed') text-indigo-600 border-b-2 border-indigo-600 @else text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 @endif">
                 Terminés
+            </a>
+            <a href="{{ route('appointments.patient', ['status' => 'cancelled']) }}"
+               class="px-4 py-2 font-medium @if($status === 'cancelled') text-indigo-600 border-b-2 border-indigo-600 @else text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 @endif">
+                Annulés
             </a>
         </div>
     </div>
@@ -52,15 +60,21 @@
                         <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $appointment->reason }}</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="px-3 py-1 rounded-full text-sm font-medium
-                            @if($appointment->status == 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300
-                            @elseif($appointment->status == 'confirmed') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
-                            @elseif($appointment->status == 'cancelled') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300
-                            @elseif($appointment->status == 'completed') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300
-                            @endif
-                        ">
-                            {{ ucfirst($appointment->status) }}
-                        </span>
+                        @if($appointment->status == 'scheduled' && $appointment->appointment_date_time > now())
+                            <span class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                                À venir
+                            </span>
+                        @else
+                            <span class="px-3 py-1 rounded-full text-sm font-medium
+                                @if($appointment->status == 'scheduled') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300
+                                @elseif($appointment->status == 'confirmed') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
+                                @elseif($appointment->status == 'cancelled') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300
+                                @elseif($appointment->status == 'completed') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300
+                                @endif
+                            ">
+                                {{ ucfirst($appointment->status) }}
+                            </span>
+                        @endif
                         <div class="dropdown relative group">
                             <button class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300">
                                 ⋮
@@ -69,10 +83,10 @@
                                 <a href="{{ route('appointments.show', $appointment) }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg">
                                     Voir détails
                                 </a>
-                                <a href="{{ route('export.pdf', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <a href="{{ route('export.page', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     Exporter PDF
                                 </a>
-                                @if($appointment->status == 'pending' && $appointment->appointment_date_time > now()->addHours(24))
+                                @if($appointment->status == 'scheduled' && $appointment->appointment_date_time > now()->addHours(24))
                                     <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" class="block">
                                         @csrf
                                         @method('DELETE')
@@ -101,7 +115,7 @@
 
     @if($appointments->hasPages())
         <div class="mt-8">
-            {{ $appointments->links() }}
+            {{ $appointments->appends(request()->query())->links() }}
         </div>
     @endif
 </div>

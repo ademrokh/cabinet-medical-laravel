@@ -18,6 +18,10 @@ class GeneratePlanningJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 3;  // Retry 3 times
+    public int $backoff = 60;  // Wait 60 seconds between retries
+    public int $timeout = 300;  // 5 minutes timeout for job execution
+
     public int $doctorId;
     public array $patients;
     public array $availability;
@@ -77,10 +81,18 @@ class GeneratePlanningJob implements ShouldQueue
                 }
             }
         } catch (Throwable $e) {
+            \Log::error('GeneratePlanningJob failed', [
+                'doctor_id' => $this->doctorId,
+                'date' => $this->date,
+                'error' => $e->getMessage(),
+                'attempt' => $this->attempts(),
+            ]);
+
             $planning->update([
                 'status' => 'failed',
             ]);
 
+            // Rethrow to trigger queue retry mechanism
             throw $e;
         }
     }

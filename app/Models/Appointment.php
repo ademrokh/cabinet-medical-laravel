@@ -42,8 +42,8 @@ class Appointment extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('appointment_date_time', '>=', now())
-                     ->where('status', '!=', 'cancelled')
-                     ->orderBy('appointment_date_time');
+                    ->whereIn('status', ['scheduled', 'confirmed'])
+                    ->orderBy('appointment_date_time');
     }
 
     /**

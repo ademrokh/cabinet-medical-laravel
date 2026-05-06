@@ -36,7 +36,7 @@ class AppointmentController extends Controller
             'appointment_date_time' => $validated['appointment_date_time'],
             'reason' => $validated['reason'],
             'notes' => $validated['notes'],
-            'status' => 'pending',
+            'status' => 'scheduled',
         ]);
 
         return redirect()->route('appointments.patient')->with('success', 'Rendez-vous créé avec succès!');
@@ -54,26 +54,56 @@ class AppointmentController extends Controller
     /**
      * Get patient appointments.
      */
-    public function patientIndex()
+    public function patientIndex(Request $request)
     {
-        $appointments = Appointment::where('patient_id', auth()->id())
-            ->with('doctor.user', 'doctor.specialty')
-            ->orderBy('appointment_date_time', 'desc')
+        $query = Appointment::where('patient_id', auth()->id())
+            ->with('doctor.user', 'doctor.specialty');
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status) {
+            if ($request->status === 'scheduled') {
+                // Scheduled = upcoming appointments (after today)
+                $query->where('status', 'scheduled')
+                    ->where('appointment_date_time', '>', now());
+            } else {
+                $query->where('status', $request->status);
+            }
+        }
+
+        $appointments = $query->orderBy('appointment_date_time', 'desc')
             ->paginate(10);
-        return view('appointments.patient-index', compact('appointments'));
+
+        $status = $request->get('status', '');
+
+        return view('appointments.patient-index', compact('appointments', 'status'));
     }
 
     /**
      * Get doctor appointments.
      */
-    public function doctorIndex()
+    public function doctorIndex(Request $request)
     {
         $doctor = auth()->user()->doctor;
-        $appointments = $doctor->appointments()
-            ->with('patient')
-            ->orderBy('appointment_date_time', 'desc')
+        $query = $doctor->appointments()
+            ->with('patient');
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status) {
+            if ($request->status === 'scheduled') {
+                // Scheduled = upcoming appointments (after today)
+                $query->where('status', 'scheduled')
+                    ->where('appointment_date_time', '>', now());
+            } else {
+                $query->where('status', $request->status);
+            }
+        }
+
+        $appointments = $query->orderBy('appointment_date_time', 'desc')
             ->paginate(10);
-        return view('appointments.doctor-index', compact('appointments'));
+
+        $status = $request->get('status', '');
+
+        return view('appointments.doctor-index', compact('appointments', 'status'));
     }
 
     /**

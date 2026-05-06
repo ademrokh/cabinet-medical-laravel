@@ -19,7 +19,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Rendez-vous à venir</p>
-                        <p class="text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $upcomingCount }}</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $upcomingCount ?? 0 }}</p>
                     </div>
                     <div class="bg-emerald-100 text-emerald-600 rounded-xl w-16 h-16 flex items-center justify-center">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -97,7 +97,7 @@
                     <p class="opacity-90">Consultez l'un de nos médecins qualifiés.</p>
                     <span class="mt-4 inline-block font-semibold">Commencer →</span>
                 </a>
-                <a href="#" class="block bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <a href="{{ route('documents.patient') }}" class="block bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <h3 class="text-2xl font-bold mb-2">Mes Documents</h3>
                     <p class="opacity-90">Accédez à vos ordonnances et résultats.</p>
                     <span class="mt-4 inline-block font-semibold">Consulter →</span>

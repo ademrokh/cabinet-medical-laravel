@@ -101,7 +101,7 @@
 
         <!-- Actions -->
         <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 flex flex-wrap gap-4">
-            <a href="{{ route('export.pdf', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="bg-slate-900 text-white px-6 py-2 rounded-lg hover:bg-slate-800 transition">
+            <a href="{{ route('export.page', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="bg-slate-900 text-white px-6 py-2 rounded-lg hover:bg-slate-800 transition">
                 Exporter PDF
             </a>
             @if(auth()->user()->isPatient() && $appointment->status == 'pending' && $appointment->appointment_date_time > now()->addHours(24))

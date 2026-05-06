@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             SpecialtySeeder::class,
             DoctorSeeder::class,
             AppointmentSeeder::class,
+            SmartPlanningSeeder::class,
+            PlanningSuggestionSeeder::class,
         ]);
     }
 }
