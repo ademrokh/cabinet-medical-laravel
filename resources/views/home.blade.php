@@ -1,121 +1,118 @@
 @extends('layouts.app')
 
-@section('title', 'Accueil - Cabinet Médical')
+@section('title', 'Accueil - Cabinet Medical')
 
 @section('content')
-<!-- Hero Section -->
-<div class="relative bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-orange-50"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-                <h1 class="text-5xl md:text-6xl font-bold mb-6">Bienvenue au Cabinet Médical</h1>
-                <p class="text-xl text-indigo-100 mb-8">Votre santé est notre priorité. Des médecins qualifiés et expérimentés à votre service 24h/24.</p>
-                <div class="flex gap-4">
-                    <a href="{{ route('doctors.index') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition">
-                        Nos Médecins
+                <p class="text-sm uppercase tracking-[0.35em] text-emerald-500 font-semibold">Cabinet Medical</p>
+                <h1 class="mt-4 text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight">
+                    Une experience medicale
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-sky-500 to-orange-500">claire et humaine</span>
+                </h1>
+                <p class="mt-5 text-lg text-slate-600 max-w-xl">
+                    Prenez rendez-vous, suivez vos consultations et accedez a vos documents en un espace lumineux, rapide et intelligent.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="{{ route('doctors.index') }}" class="px-8 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg hover:shadow-xl hover:bg-emerald-700 transition">
+                        Choisir un medecin
                     </a>
-                    @if(!auth()->check())
-                        <a href="{{ route('register') }}" class="bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-800 transition">
-                            S'inscrire
+                    @if(auth()->check())
+                        <a href="{{ route('appointments.create') }}" class="px-8 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">
+                            Prendre RDV
                         </a>
                     @else
-                        <a href="{{ route('appointments.create') }}" class="bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-800 transition">
-                            Prendre RDV
+                        <a href="{{ route('register') }}" class="px-8 py-3 rounded-xl border border-emerald-200 bg-white text-emerald-700 font-semibold hover:bg-emerald-50 transition">
+                            Creer un compte
                         </a>
                     @endif
                 </div>
             </div>
-            <div class="hidden md:block">
-                <div class="bg-indigo-400 rounded-full w-64 h-64 mx-auto flex items-center justify-center text-6xl">
-                    <img src="{{ asset('icons/doctor.svg') }}" alt="Doctors" class="w-10 h-10 text-indigo-600">
+            <div class="relative">
+                <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-emerald-200 blur-3xl opacity-70"></div>
+                <div class="absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-orange-200 blur-3xl opacity-70"></div>
+                <img src="https://images.unsplash.com/photo-1504814532849-92751b0bc8a4?q=80&w=1800&auto=format&fit=crop" alt="Equipe medicale" class="relative rounded-3xl shadow-2xl">
+                <div class="absolute -bottom-6 left-6 bg-white/90 backdrop-blur rounded-2xl px-5 py-4 shadow-xl">
+                    <p class="text-sm text-slate-500">Satisfaction patients</p>
+                    <p class="text-2xl font-bold text-slate-900">98%</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Services Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Nos Services</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg hover:shadow-xl transition">
-            <div class="text-4xl mb-4">🩺</div>
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Consultations Médicales</h3>
-            <p class="text-gray-600 dark:text-gray-400">Consultations avec nos médecins qualifiés pour tous vos besoins de santé.</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg hover:shadow-xl transition">
-            <img src="{{ asset('icons/clipboard.svg') }}" alt="Appointments" class="w-12 h-12 text-indigo-600 mx-auto mb-4">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Suivi Médical</h3>
-            <p class="text-gray-600 dark:text-gray-400">Suivis réguliers et gestion de vos dossiers médicaux en toute sécurité.</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-8 shadow-lg hover:shadow-xl transition">
-            <div class="text-4xl mb-4">💉</div>
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Vaccinations</h3>
-            <p class="text-gray-600 dark:text-gray-400">Tous les vaccins recommandés et préventifs disponibles.</p>
+<section class="relative py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition">
+                <div class="h-12 w-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">24/7</div>
+                <h3 class="mt-4 text-xl font-semibold text-slate-900">Suivi continu</h3>
+                <p class="mt-2 text-slate-600">Des rapports clairs et un suivi medical simplifie.</p>
+            </div>
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition">
+                <div class="h-12 w-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold">IA</div>
+                <h3 class="mt-4 text-xl font-semibold text-slate-900">Planning intelligent</h3>
+                <p class="mt-2 text-slate-600">Des plannings optimises et des suggestions de creneaux.</p>
+            </div>
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-lg hover:shadow-xl transition">
+                <div class="h-12 w-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">SOS</div>
+                <h3 class="mt-4 text-xl font-semibold text-slate-900">Priorites medicales</h3>
+                <p class="mt-2 text-slate-600">Un tri des patients pour mieux gerer les urgences.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Doctors Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Nos Médecins</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @forelse($doctors as $doctor)
-            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-105">
-                <div class="bg-gradient-to-r from-indigo-500 to-blue-500 h-32 flex items-center justify-center">
-                    <img src="{{ asset('icons/doctor.svg') }}" alt="Doctor" class="w-16 h-16 text-indigo-600 mx-auto">
+<section class="relative py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Experts</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Nos medecins</h2>
+            </div>
+            <a href="{{ route('doctors.index') }}" class="text-emerald-600 font-semibold">Voir tous</a>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($doctors as $doctor)
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden hover:-translate-y-1 transition">
+                    <div class="h-36 bg-gradient-to-r from-emerald-200 via-sky-200 to-orange-200"></div>
+                    <div class="p-6 -mt-12">
+                        <img src="{{ $doctor->user->photo ? asset('storage/' . $doctor->user->photo) : 'https://ui-avatars.com/api/?name=' . urlencode($doctor->user->name) . '&color=0F172A&background=E2E8F0' }}" class="w-20 h-20 rounded-2xl border-4 border-white shadow-md" alt="{{ $doctor->user->name }}">
+                        <h3 class="mt-4 text-xl font-semibold text-slate-900">{{ $doctor->user->name }}</h3>
+                        <p class="text-emerald-600 font-semibold">{{ $doctor->specialty->name }}</p>
+                        <p class="mt-3 text-sm text-slate-600 line-clamp-2">{{ $doctor->biography }}</p>
+                        <a href="{{ route('doctors.show', $doctor) }}" class="mt-4 inline-flex items-center text-slate-900 font-semibold">
+                            Voir le profil →
+                        </a>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ $doctor->user->name }}</h3>
-                    <p class="text-indigo-600 font-medium mb-3">{{ $doctor->specialty->name }}</p>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{{ $doctor->biography }}</p>
-                    <a href="{{ route('doctors.show', $doctor) }}" class="text-indigo-600 hover:text-indigo-700 font-semibold">
-                        Voir le profil →
-                    </a>
+            @empty
+                <p class="text-slate-600">Aucun medecin disponible.</p>
+            @endforelse
+        </div>
+    </div>
+</section>
+
+<section class="relative py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-emerald-600 via-sky-600 to-orange-500 rounded-3xl p-10 text-white shadow-2xl">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold">Pret a demarrer ?</h2>
+                    <p class="mt-3 text-white/80">Accedez a vos rendez-vous, vos documents et a nos plannings IA.</p>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                    @if(auth()->check())
+                        <a href="{{ route('dashboard') }}" class="px-8 py-3 rounded-xl bg-white text-slate-900 font-semibold">Ouvrir mon tableau</a>
+                    @else
+                        <a href="{{ route('register') }}" class="px-8 py-3 rounded-xl bg-white text-slate-900 font-semibold">Creer un compte</a>
+                    @endif
+                    <a href="{{ route('doctors.index') }}" class="px-8 py-3 rounded-xl border border-white/40 font-semibold">Voir les medecins</a>
                 </div>
             </div>
-        @empty
-            <p class="text-center text-gray-600 dark:text-gray-400 col-span-3">Aucun médecin disponible.</p>
-        @endforelse
-    </div>
-    <div class="text-center mt-12">
-        <a href="{{ route('doctors.index') }}" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition inline-block">
-            Voir tous les médecins
-        </a>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="bg-indigo-600 text-white py-16">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl font-bold mb-6">Prêt à prendre un rendez-vous ?</h2>
-        <p class="text-xl text-indigo-100 mb-8">Consultez nos médecins et prenez soin de votre santé dès aujourd'hui.</p>
-        @if(!auth()->check())
-            <a href="{{ route('register') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition inline-block">
-                Créer un compte
-            </a>
-        @else
-            <a href="{{ route('appointments.create') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition inline-block">
-                Prendre RDV
-            </a>
-        @endif
-    </div>
-</section>
-
-<!-- Info Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        <div>
-            <div class="text-4xl font-bold text-indigo-600 mb-2">8+</div>
-            <p class="text-gray-600 dark:text-gray-400">Spécialités Médicales</p>
-        </div>
-        <div>
-            <div class="text-4xl font-bold text-indigo-600 mb-2">6+</div>
-            <p class="text-gray-600 dark:text-gray-400">Médecins Expérimentés</p>
-        </div>
-        <div>
-            <div class="text-4xl font-bold text-indigo-600 mb-2">1000+</div>
-            <p class="text-gray-600 dark:text-gray-400">Patients Satisfaits</p>
         </div>
     </div>
 </section>

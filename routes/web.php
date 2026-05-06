@@ -4,10 +4,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\PdfExportController;
+use App\Http\Controllers\PlanningController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
     $doctors = \App\Models\Doctor::with('user', 'specialty')->take(3)->get();
     return view('home', compact('doctors'));
 })->name('home');
@@ -32,7 +38,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Patient routes
     Route::middleware('patient')->group(function () {
         Route::get('/patient/dashboard', function () {
-            return view('patient.dashboard');
+            $patient = auth()->user();
+
+            $upcomingCount = $patient->appointments()
+                ->upcoming()
+                ->count();
+
+            $completedCount = $patient->appointments()
+                ->where('status', 'completed')
+                ->count();
+
+            $documentsCount = $patient->medicalDocuments()
+                ->count();
+
+            $upcomingAppointments = $patient->appointments()
+                ->upcoming()
+                ->with('doctor.user')
+                ->take(5)
+                ->get();
+
+            return view('patient.dashboard', compact('upcomingCount', 'completedCount', 'documentsCount', 'upcomingAppointments'));
         })->name('patient.dashboard');
 
         Route::get('/appointments', [AppointmentController::class, 'patientIndex'])->name('appointments.patient');
@@ -57,6 +82,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('admin/appointments', AppointmentController::class, ['as' => 'admin'])->except('show');
         Route::resource('admin/specialties', 'SpecialtyController', ['as' => 'admin']);
     });
+
+    // Planning (doctor/admin)
+    Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
+    Route::post('/planning/generate', [PlanningController::class, 'generate'])->name('planning.generate');
+
+    Route::get('/export-pdf/{type}/{id}', [PdfExportController::class, 'generatePdf'])->name('export.pdf');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

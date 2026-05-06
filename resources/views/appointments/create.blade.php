@@ -64,10 +64,10 @@
 
             <!-- Submit -->
             <div class="flex gap-4">
-                <button type="submit" class="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
+                <button type="submit" class="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition font-semibold">
                     Confirmer le rendez-vous
                 </button>
-                <a href="{{ route('home') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
+                <a href="{{ route('home') }}" class="flex-1 bg-slate-200 text-slate-900 px-6 py-3 rounded-lg hover:bg-slate-300 transition font-semibold text-center">
                     Annuler
                 </a>
             </div>

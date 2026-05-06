@@ -82,14 +82,18 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
         <a href="{{ route('doctors.index') }}" class="bg-indigo-600 text-white rounded-lg p-6 hover:bg-indigo-700 transition">
             <h3 class="text-xl font-bold mb-2">Médecins</h3>
             <p class="opacity-90">Gérer les médecins</p>
         </a>
-        <a href="{{ route('admin.appointments', ['as' => 'admin']) }}" class="bg-green-600 text-white rounded-lg p-6 hover:bg-green-700 transition">
+        <a href="{{ route('admin.appointments.index') }}" class="bg-green-600 text-white rounded-lg p-6 hover:bg-green-700 transition">
             <h3 class="text-xl font-bold mb-2">Rendez-vous</h3>
             <p class="opacity-90">Gérer tous les rendez-vous</p>
+        </a>
+        <a href="{{ route('planning.index') }}" class="bg-sky-600 text-white rounded-lg p-6 hover:bg-sky-700 transition">
+            <h3 class="text-xl font-bold mb-2">Planning IA</h3>
+            <p class="opacity-90">Generer des plannings optimises</p>
         </a>
         <a href="#" class="bg-purple-600 text-white rounded-lg p-6 hover:bg-purple-700 transition">
             <h3 class="text-xl font-bold mb-2">Patients</h3>

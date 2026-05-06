@@ -10,6 +10,22 @@
 # cabinet-medical-laravel
 Projet Laravel d'une cabine médicale avec une fonctionnalité d'analyse de documents médicaux avec AI
 
+## Fonctionnalites ajoutees
+
+- Planning intelligent (SmartPlanning, PlanningSuggestion, GeneratePlanningJob, LlmService)
+- Export PDF avec resume IA (route export.pdf)
+- Planning IA via endpoints API securises
+
+## Configuration IA
+
+Ajoutez ces variables dans votre fichier `.env`:
+
+```
+NVIDIA_API_KEY=...
+NVIDIA_MODEL=meta/llama-3.1-8b-instruct
+NVIDIA_API_ENDPOINT=https://integrate.api.nvidia.com/v1/chat/completions
+```
+
 
 ## About Laravel
 

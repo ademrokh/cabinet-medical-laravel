@@ -3,93 +3,108 @@
 @section('title', 'Tableau de Bord Patient - Cabinet Médical')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Bienvenue, {{ auth()->user()->name }} 👋</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Voici un aperçu de votre espace patient</p>
-    </div>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="mb-12" x-data="{ show: false }" x-init="setTimeout(() => show = true, 100)" x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                Bienvenue, <span class="text-emerald-600">{{ auth()->user()->name }}</span>
+            </h1>
+            <p class="mt-3 text-lg text-gray-600 dark:text-gray-400">Voici un aperçu de votre espace patient.</p>
+        </header>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Rendez-vous à venir</p>
-                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $upcomingCount }}</p>
-                </div>
-                <img src="{{ asset('icons/calendar.svg') }}" alt="Appointments" class="w-12 h-12 text-indigo-600 mx-auto">
-            </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Rendez-vous complétés</p>
-                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $completedCount }}</p>
-                </div>
-                <div class="text-4xl">✓</div>
-            </div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Documents médicaux</p>
-                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $documentsCount }}</p>
-                </div>
-                <div class="text-4xl">📄</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Prochains rendez-vous -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Prochains rendez-vous</h2>
-            <a href="{{ route('appointments.patient') }}" class="text-indigo-600 hover:text-indigo-700">Voir tous →</a>
-        </div>
-
-        @if($upcomingAppointments->count() > 0)
-            <div class="space-y-4">
-                @foreach($upcomingAppointments->take(3) as $appointment)
-                    <div class="flex items-center justify-between p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
-                        <div>
-                            <p class="font-semibold text-gray-900 dark:text-white">{{ $appointment->doctor->user->name }}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ $appointment->appointment_date_time->format('d/m/Y à H:i') }}
-                            </p>
-                            <p class="text-sm text-indigo-600">{{ $appointment->reason }}</p>
-                        </div>
-                        <span class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 rounded-full text-sm font-medium">
-                            Confirmé
-                        </span>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Upcoming Appointments -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:-translate-y-2 transition-transform duration-300" x-data="{ show: false }" x-init="setTimeout(() => show = true, 300)" x-show="show" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Rendez-vous à venir</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $upcomingCount }}</p>
                     </div>
-                @endforeach
+                    <div class="bg-emerald-100 text-emerald-600 rounded-xl w-16 h-16 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                </div>
             </div>
-        @else
-            <div class="text-center py-8">
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Vous n'avez aucun rendez-vous prévu</p>
-                <a href="{{ route('appointments.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition inline-block">
-                    Prendre un rendez-vous
+            <!-- Completed Appointments -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:-translate-y-2 transition-transform duration-300" x-data="{ show: false }" x-init="setTimeout(() => show = true, 400)" x-show="show" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Rendez-vous complétés</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $completedCount }}</p>
+                    </div>
+                    <div class="bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300 rounded-xl w-16 h-16 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+            <!-- Medical Documents -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:-translate-y-2 transition-transform duration-300" x-data="{ show: false }" x-init="setTimeout(() => show = true, 500)" x-show="show" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Documents médicaux</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $documentsCount }}</p>
+                    </div>
+                    <div class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 rounded-xl w-16 h-16 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Upcoming Appointments List -->
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8" x-data="{ show: false }" x-init="setTimeout(() => show = true, 600)" x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Prochains rendez-vous</h2>
+                    <a href="{{ route('appointments.patient') }}" class="text-emerald-600 hover:text-emerald-700 font-semibold transition">Voir tous →</a>
+                </div>
+
+                @if($upcomingAppointments->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($upcomingAppointments->take(3) as $appointment)
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-4">
+                                    <img src="{{ $appointment->doctor->user->photo ? asset('storage/' . $appointment->doctor->user->photo) : 'https://ui-avatars.com/api/?name=' . urlencode($appointment->doctor->user->name) . '&color=7F9CF5&background=EBF4FF&size=64' }}" alt="Photo de {{ $appointment->doctor->user->name }}" class="w-12 h-12 rounded-full object-cover">
+                                    <div>
+                                        <p class="font-semibold text-gray-900 dark:text-white">Dr. {{ $appointment->doctor->user->name }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ $appointment->appointment_date_time->isoFormat('LLLL') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="{{ route('appointments.show', $appointment) }}" class="text-emerald-600 text-2xl">
+                                    →
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-12">
+                        <svg class="w-20 h-20 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <p class="text-gray-500 dark:text-gray-400 mt-4 text-lg">Vous n'avez aucun rendez-vous prévu.</p>
+                        <a href="{{ route('appointments.create') }}" class="mt-6 inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-emerald-700 transition-transform transform hover:scale-105 shadow-lg">
+                            Prendre un rendez-vous
+                        </a>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="space-y-6" x-data="{ show: false }" x-init="setTimeout(() => show = true, 700)" x-show="show" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 transform -translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                <a href="{{ route('appointments.create') }}" class="block bg-gradient-to-br from-indigo-500 to-blue-500 text-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <h3 class="text-2xl font-bold mb-2">Prendre un RDV</h3>
+                    <p class="opacity-90">Consultez l'un de nos médecins qualifiés.</p>
+                    <span class="mt-4 inline-block font-semibold">Commencer →</span>
+                </a>
+                <a href="#" class="block bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <h3 class="text-2xl font-bold mb-2">Mes Documents</h3>
+                    <p class="opacity-90">Accédez à vos ordonnances et résultats.</p>
+                    <span class="mt-4 inline-block font-semibold">Consulter →</span>
                 </a>
             </div>
-        @endif
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-lg p-8 cursor-pointer hover:shadow-lg transition">
-            <h3 class="text-2xl font-bold mb-2">Prendre un rendez-vous</h3>
-            <p class="mb-4 opacity-90">Consultez l'un de nos médecins</p>
-            <a href="{{ route('appointments.create') }}" class="text-indigo-100 hover:text-white font-semibold">
-                Commencer →
-            </a>
-        </div>
-        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-8 cursor-pointer hover:shadow-lg transition">
-            <h3 class="text-2xl font-bold mb-2">Mes documents</h3>
-            <p class="mb-4 opacity-90">Accédez à vos ordonnances et résultats</p>
-            <a href="#documents" class="text-green-100 hover:text-white font-semibold">
-                Consulter →
-            </a>
         </div>
     </div>
 </div>
 @endsection
+

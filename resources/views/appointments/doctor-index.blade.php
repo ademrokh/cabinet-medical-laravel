@@ -58,6 +58,12 @@
                         </span>
                     </div>
                     <div class="flex gap-2 justify-end">
+                        <a href="{{ route('appointments.show', $appointment) }}" class="bg-slate-900 text-white px-3 py-2 rounded hover:bg-slate-800 transition text-sm">
+                            Details
+                        </a>
+                        <a href="{{ route('export.pdf', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="bg-emerald-600 text-white px-3 py-2 rounded hover:bg-emerald-700 transition text-sm">
+                            PDF
+                        </a>
                         @if($appointment->status == 'pending')
                             <form action="{{ route('appointments.confirm', $appointment) }}" method="POST" class="inline">
                                 @csrf

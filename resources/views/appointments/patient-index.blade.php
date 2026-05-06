@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Mes Rendez-vous</h1>
         @if(auth()->user()->isPatient())
-            <a href="{{ route('appointments.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+            <a href="{{ route('appointments.create') }}" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition">
                 + Nouveau RDV
             </a>
         @endif
@@ -69,6 +69,9 @@
                                 <a href="{{ route('appointments.show', $appointment) }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg">
                                     Voir détails
                                 </a>
+                                <a href="{{ route('export.pdf', ['type' => 'appointment', 'id' => $appointment->id]) }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    Exporter PDF
+                                </a>
                                 @if($appointment->status == 'pending' && $appointment->appointment_date_time > now()->addHours(24))
                                     <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" class="block">
                                         @csrf
@@ -88,7 +91,7 @@
                 <img src="{{ asset('icons/calendar.svg') }}" alt="No Appointments" class="w-16 h-16 text-gray-400 mx-auto mb-4">
                 <p class="text-gray-600 dark:text-gray-400 text-lg mb-6">Aucun rendez-vous pour le moment</p>
                 @if(auth()->user()->isPatient())
-                    <a href="{{ route('appointments.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition inline-block">
+                    <a href="{{ route('appointments.create') }}" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition inline-block">
                         Prendre un rendez-vous
                     </a>
                 @endif

@@ -14,6 +14,19 @@ return [
     |
     */
 
+    'mailgun' => [
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
+        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'scheme' => 'https',
+    ],
+
+    'nvidia' => [
+        'api_key' => env('NVIDIA_API_KEY'),
+        'endpoint' => env('NVIDIA_API_ENDPOINT'),
+        'model' => env('NVIDIA_MODEL'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],
