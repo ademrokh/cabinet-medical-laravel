@@ -74,6 +74,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/doctor/appointments', [AppointmentController::class, 'doctorIndex'])->name('doctor.appointments');
         Route::patch('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
         Route::patch('/appointments/{appointment}/complete', [AppointmentController::class, 'complete'])->name('appointments.complete');
+        Route::get('/doctor/documents', [MedicalDocumentController::class, 'doctorIndex'])->name('documents.doctor');
+        Route::post('/doctor/documents', [MedicalDocumentController::class, 'store'])->name('documents.store');
     });
 
     // Admin routes

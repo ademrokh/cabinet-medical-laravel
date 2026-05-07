@@ -37,6 +37,14 @@ class Appointment extends Model
     }
 
     /**
+     * Get the medical documents for this appointment.
+     */
+    public function medicalDocuments()
+    {
+        return $this->hasMany(MedicalDocument::class);
+    }
+
+    /**
      * Scope to get upcoming appointments.
      */
     public function scopeUpcoming($query)

@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Doctor;
+use App\Models\Specialty;
+use App\Models\Availability;
 use Illuminate\Support\Facades\Hash;
 
 class UserAccountsSeeder extends Seeder
@@ -15,20 +18,48 @@ class UserAccountsSeeder extends Seeder
     public function run(): void
     {
         // Admin Account
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@cabinet.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@cabinet.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
 
         // Doctor Account
-        User::create([
-            'name' => 'Dr. Smith',
-            'email' => 'dr.smith@cabinet.com',
-            'password' => Hash::make('password'),
-            'role' => 'doctor',
-        ]);
+        $doctorUser = User::firstOrCreate(
+            ['email' => 'dr.smith@cabinet.com'],
+            [
+                'name' => 'Dr. Smith',
+                'password' => Hash::make('password'),
+                'role' => 'doctor',
+            ]
+        );
+
+        $specialtyId = Specialty::query()->value('id');
+
+        if ($specialtyId) {
+            $doctorProfile = Doctor::firstOrCreate(
+                ['user_id' => $doctorUser->id],
+                [
+                    'specialty_id' => $specialtyId,
+                    'biography' => 'Seeded doctor profile.',
+                    'available' => true,
+                ]
+            );
+
+            if ($doctorProfile->wasRecentlyCreated) {
+                for ($day = 1; $day <= 5; $day++) {
+                    Availability::create([
+                        'doctor_id' => $doctorProfile->id,
+                        'day_of_week' => $day,
+                        'start_time' => '09:00:00',
+                        'end_time' => '17:00:00',
+                    ]);
+                }
+            }
+        }
 
         // Patient Accounts
         $patients = [
@@ -50,9 +81,10 @@ class UserAccountsSeeder extends Seeder
         ];
 
         foreach ($patients as $patient) {
-            User::create([
-                'name' => $patient['name'],
+            User::firstOrCreate([
                 'email' => $patient['email'],
+            ], [
+                'name' => $patient['name'],
                 'password' => Hash::make('password'),
                 'role' => 'patient',
                 'telephone' => '06' . rand(10000000, 99999999),

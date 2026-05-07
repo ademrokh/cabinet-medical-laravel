@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MedicalDocument extends Model
 {
-    protected $fillable = ['patient_id', 'doctor_id', 'type', 'file_path', 'description'];
+    protected $fillable = ['patient_id', 'doctor_id', 'appointment_id', 'type', 'file_path', 'description'];
 
     /**
      * Get the patient for this document.
@@ -22,5 +22,13 @@ class MedicalDocument extends Model
     public function doctor()
     {
         return $this->belongsTo(Doctor::class);
+    }
+
+    /**
+     * Get the appointment tied to this document.
+     */
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
     }
 }

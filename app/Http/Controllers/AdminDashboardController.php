@@ -38,6 +38,10 @@ class AdminDashboardController extends Controller
     {
         $doctor = auth()->user()->doctor;
 
+        if (!$doctor) {
+            abort(403);
+        }
+
         $upcomingCount = $doctor->appointments()
             ->upcoming()
             ->count();

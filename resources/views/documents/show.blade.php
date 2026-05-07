@@ -7,7 +7,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Header -->
         <div class="mb-8">
-            <a href="{{ route('documents.patient') }}" class="text-emerald-600 hover:text-emerald-700 font-semibold mb-4 inline-block">← Retour aux documents</a>
+            <a href="{{ auth()->user()->isDoctor() ? route('documents.doctor') : route('documents.patient') }}" class="text-emerald-600 hover:text-emerald-700 font-semibold mb-4 inline-block">← Retour aux documents</a>
             <div class="flex justify-between items-start">
                 <div>
                     <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
@@ -78,6 +78,15 @@
                         <p class="text-gray-900 dark:text-white">{{ $document->created_at->isoFormat('D MMMM YYYY à H:mm') }}</p>
                     </div>
 
+                    @if($document->appointment)
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 font-semibold mb-2">Rendez-vous</p>
+                            <p class="text-gray-900 dark:text-white">
+                                {{ $document->appointment->appointment_date_time->isoFormat('D MMMM YYYY à H:mm') }}
+                            </p>
+                        </div>
+                    @endif
+
                     <!-- File -->
                     <div>
                         <p class="text-sm text-gray-600 dark:text-gray-400 font-semibold mb-2">Fichier</p>
@@ -119,7 +128,7 @@
                                 </div>
                             </div>
                         @else
-                            <img src="{{ Storage::url($document->file_path) }}" alt="Document preview" class="max-w-full h-auto rounded-lg shadow">
+                            <img src="{{ Storage::disk('public')->url($document->file_path) }}" alt="Document preview" class="max-w-full h-auto rounded-lg shadow">
                         @endif
                     @else
                         <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-8 text-center">

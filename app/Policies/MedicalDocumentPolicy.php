@@ -30,6 +30,6 @@ class MedicalDocumentPolicy
      */
     public function delete(User $user, MedicalDocument $document): bool
     {
-        return $user->id === $document->doctor_id || $user->isAdmin();
+        return ($user->isDoctor() && $user->doctor->id === $document->doctor_id) || $user->isAdmin();
     }
 }

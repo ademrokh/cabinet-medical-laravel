@@ -6,10 +6,17 @@
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header class="mb-12" x-data="{ show: false }" x-init="setTimeout(() => show = true, 100)" x-show="show" x-transition:enter="transition ease-out duration-1000" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Bienvenue, <span class="text-emerald-600">Dr. {{ auth()->user()->name }}</span>
-            </h1>
-            <p class="mt-3 text-lg text-gray-600 dark:text-gray-400">Votre tableau de bord pour une gestion efficace.</p>
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                        Bienvenue, <span class="text-emerald-600">Dr. {{ auth()->user()->name }}</span>
+                    </h1>
+                    <p class="mt-3 text-lg text-gray-600 dark:text-gray-400">Votre tableau de bord pour une gestion efficace.</p>
+                </div>
+                <a href="{{ route('documents.doctor') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg hover:bg-emerald-700 transition">
+                    Nouveau document
+                </a>
+            </div>
         </header>
 
         <!-- Stats Cards -->

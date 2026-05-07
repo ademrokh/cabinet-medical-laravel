@@ -74,6 +74,7 @@
                                         @elseif(Auth::user()->isDoctor())
                                             <a href="{{ route('doctor.dashboard') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700">Tableau de bord</a>
                                             <a href="{{ route('doctor.appointments') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700">Mes RDV</a>
+                                            <a href="{{ route('documents.doctor') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700">Documents</a>
                                         @elseif(Auth::user()->isAdmin())
                                             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700">Admin Dashboard</a>
                                         @endif
@@ -101,7 +102,9 @@
             </nav>
 
             <main class="min-h-screen">
-                {{ $slot ?? '' }}
+                @if(isset($slot) && (is_string($slot) || $slot instanceof \Illuminate\Support\HtmlString))
+                    {{ $slot }}
+                @endif
                 @yield('content')
             </main>
 

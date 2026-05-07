@@ -83,7 +83,7 @@
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-        <a href="{{ route('doctors.index') }}" class="bg-indigo-600 text-white rounded-lg p-6 hover:bg-indigo-700 transition">
+        <a href="{{ route('admin.doctors.index') }}" class="bg-indigo-600 text-white rounded-lg p-6 hover:bg-indigo-700 transition">
             <h3 class="text-xl font-bold mb-2">Médecins</h3>
             <p class="opacity-90">Gérer les médecins</p>
         </a>
