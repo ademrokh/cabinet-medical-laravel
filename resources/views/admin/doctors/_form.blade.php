@@ -1,19 +1,44 @@
 @php
     $isEdit = isset($doctor);
+    $doctor = $doctor ?? null;
 @endphp
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="lg:col-span-1">
-        <label for="user_id" class="block text-sm font-semibold text-slate-700">Doctor User</label>
-        <select id="user_id" name="user_id" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400">
-            <option value="">Select a doctor user</option>
-            @foreach($users as $user)
-                <option value="{{ $user->id }}" @if(old('user_id', $doctor->user_id ?? '') == $user->id) selected @endif>
-                    {{ $user->name }} ({{ $user->email }})
-                </option>
-            @endforeach
-        </select>
-        @error('user_id')
+        <label for="name" class="block text-sm font-semibold text-slate-700">Full name</label>
+        <input id="name" name="name" type="text" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400" value="{{ old('name', optional($doctor?->user)->name) }}" placeholder="Dr. Jane Doe">
+        @error('name')
+            <p class="mt-2 text-sm text-rose-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="lg:col-span-1">
+        <label for="email" class="block text-sm font-semibold text-slate-700">Email</label>
+        <input id="email" name="email" type="email" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400" value="{{ old('email', optional($doctor?->user)->email) }}" placeholder="doctor@clinic.com">
+        @error('email')
+            <p class="mt-2 text-sm text-rose-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="lg:col-span-1">
+        <label for="password" class="block text-sm font-semibold text-slate-700">
+            {{ $isEdit ? 'New password (optional)' : 'Password' }}
+        </label>
+        <input id="password" name="password" type="password" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400" placeholder="********">
+        @error('password')
+            <p class="mt-2 text-sm text-rose-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="lg:col-span-1">
+        <label for="password_confirmation" class="block text-sm font-semibold text-slate-700">Confirm password</label>
+        <input id="password_confirmation" name="password_confirmation" type="password" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400" placeholder="********">
+    </div>
+
+    <div class="lg:col-span-1">
+        <label for="telephone" class="block text-sm font-semibold text-slate-700">Telephone</label>
+        <input id="telephone" name="telephone" type="text" class="mt-2 w-full rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-400" value="{{ old('telephone', optional($doctor?->user)->telephone) }}" placeholder="01 23 45 67 89">
+        @error('telephone')
             <p class="mt-2 text-sm text-rose-600">{{ $message }}</p>
         @enderror
     </div>

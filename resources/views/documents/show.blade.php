@@ -119,14 +119,11 @@
 
                     @if(in_array($fileExtension, ['pdf', 'jpg', 'jpeg', 'png', 'gif']))
                         @if($fileExtension === 'pdf')
-                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-96 flex items-center justify-center">
-                                <div class="text-center">
-                                    <p class="text-gray-500 dark:text-gray-400 mb-4">Document PDF</p>
-                                    <a href="{{ route('documents.download', $document) }}" download class="inline-block bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
-                                        📥 Télécharger pour voir
-                                    </a>
-                                </div>
-                            </div>
+                            <iframe
+                                src="{{ Storage::disk('public')->url($document->file_path) }}"
+                                class="w-full h-[32rem] rounded-lg shadow"
+                                title="PDF preview"
+                            ></iframe>
                         @else
                             <img src="{{ Storage::disk('public')->url($document->file_path) }}" alt="Document preview" class="max-w-full h-auto rounded-lg shadow">
                         @endif

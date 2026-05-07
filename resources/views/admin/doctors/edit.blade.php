@@ -24,7 +24,7 @@
     <div class="mb-8 fade-up">
         <a href="{{ route('admin.doctors.index') }}" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition">Back to doctors</a>
         <h1 class="text-3xl font-bold text-slate-900 mt-2">Edit Doctor</h1>
-        <p class="text-slate-600 mt-1">Update doctor profile information and availability.</p>
+        <p class="text-slate-600 mt-1">Update doctor account and profile information.</p>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 fade-up">

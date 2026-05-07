@@ -127,7 +127,7 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center justify-end gap-3">
-                                                <a href="{{ route('documents.show', $document) }}" class="text-emerald-600 font-semibold hover:text-emerald-700 transition">Voir</a>
+                                                <a href="{{ route('documents.show', $document) }}" class="text-emerald-600 font-semibold hover:text-emerald-700 transition" target="_blank" rel="noopener">Voir</a>
                                                 <a href="{{ route('documents.download', $document) }}" class="text-slate-600 font-semibold hover:text-slate-800 transition" download>Telecharger</a>
                                             </div>
                                         </td>

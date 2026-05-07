@@ -64,9 +64,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
 
         Route::get('/documents', [MedicalDocumentController::class, 'patientIndex'])->name('documents.patient');
-        Route::get('/documents/{document}', [MedicalDocumentController::class, 'show'])->name('documents.show');
-        Route::get('/documents/{document}/download', [MedicalDocumentController::class, 'download'])->name('documents.download');
     });
+
+    Route::get('/documents/{document}', [MedicalDocumentController::class, 'show'])->name('documents.show');
+    Route::get('/documents/{document}/download', [MedicalDocumentController::class, 'download'])->name('documents.download');
 
     // Doctor routes
     Route::middleware('doctor')->group(function () {

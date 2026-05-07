@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class DoctorController extends Controller
@@ -41,12 +42,7 @@ class DoctorController extends Controller
     public function create()
     {
         $specialties = Specialty::orderBy('name')->get();
-        $users = User::where('role', 'doctor')
-            ->whereDoesntHave('doctor')
-            ->orderBy('name')
-            ->get();
-
-        return view('admin.doctors.create', compact('specialties', 'users'));
+        return view('admin.doctors.create', compact('specialties'));
     }
 
     /**
@@ -55,12 +51,10 @@ class DoctorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id')->where('role', 'doctor'),
-                'unique:doctors,user_id',
-            ],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'telephone' => ['nullable', 'string', 'max:30'],
             'specialty_id' => ['required', 'integer', 'exists:specialties,id'],
             'biography' => ['nullable', 'string'],
             'available' => ['nullable', 'boolean'],
@@ -68,7 +62,20 @@ class DoctorController extends Controller
 
         $validated['available'] = (bool) ($validated['available'] ?? false);
 
-        Doctor::create($validated);
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'doctor',
+            'telephone' => $validated['telephone'] ?? null,
+        ]);
+
+        Doctor::create([
+            'user_id' => $user->id,
+            'specialty_id' => $validated['specialty_id'],
+            'biography' => $validated['biography'] ?? null,
+            'available' => $validated['available'],
+        ]);
 
         return redirect()
             ->route('admin.doctors.index')
@@ -91,15 +98,7 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::with('user', 'specialty')->findOrFail($id);
         $specialties = Specialty::orderBy('name')->get();
-        $users = User::where('role', 'doctor')
-            ->where(function ($query) use ($doctor) {
-                $query->whereDoesntHave('doctor')
-                    ->orWhere('id', $doctor->user_id);
-            })
-            ->orderBy('name')
-            ->get();
-
-        return view('admin.doctors.edit', compact('doctor', 'specialties', 'users'));
+        return view('admin.doctors.edit', compact('doctor', 'specialties'));
     }
 
     /**
@@ -109,12 +108,10 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::findOrFail($id);
         $validated = $request->validate([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id')->where('role', 'doctor'),
-                Rule::unique('doctors', 'user_id')->ignore($doctor->id),
-            ],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($doctor->user_id)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'telephone' => ['nullable', 'string', 'max:30'],
             'specialty_id' => ['required', 'integer', 'exists:specialties,id'],
             'biography' => ['nullable', 'string'],
             'available' => ['nullable', 'boolean'],
@@ -122,7 +119,18 @@ class DoctorController extends Controller
 
         $validated['available'] = (bool) ($validated['available'] ?? false);
 
-        $doctor->update($validated);
+        $doctor->user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'telephone' => $validated['telephone'] ?? null,
+            ...(!empty($validated['password']) ? ['password' => Hash::make($validated['password'])] : []),
+        ]);
+
+        $doctor->update([
+            'specialty_id' => $validated['specialty_id'],
+            'biography' => $validated['biography'] ?? null,
+            'available' => $validated['available'],
+        ]);
 
         return redirect()
             ->route('admin.doctors.index')

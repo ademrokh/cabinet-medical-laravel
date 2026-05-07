@@ -55,7 +55,11 @@ class PlanningController extends Controller
             ];
         })->toArray();
 
-        GeneratePlanningJob::dispatch($doctor->id, $patientPayload, $availability, $validated['date']);
+        if (app()->environment('local')) {
+            GeneratePlanningJob::dispatchSync($doctor->id, $patientPayload, $availability, $validated['date']);
+        } else {
+            GeneratePlanningJob::dispatch($doctor->id, $patientPayload, $availability, $validated['date']);
+        }
 
         return back()->with('success', 'Generation du planning lancee.');
     }
@@ -92,7 +96,11 @@ class PlanningController extends Controller
             ];
         })->toArray();
 
-        GeneratePlanningJob::dispatch($doctor->id, $patientPayload, $availability, $validated['date']);
+        if (app()->environment('local')) {
+            GeneratePlanningJob::dispatchSync($doctor->id, $patientPayload, $availability, $validated['date']);
+        } else {
+            GeneratePlanningJob::dispatch($doctor->id, $patientPayload, $availability, $validated['date']);
+        }
 
         return response()->json([
             'status' => 'queued',
