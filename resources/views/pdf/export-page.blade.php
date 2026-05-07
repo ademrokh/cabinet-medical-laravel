@@ -30,7 +30,7 @@
     </div>
 
     {{-- Download form --}}
-    <form id="download-form" method="POST" action="{{ route('export.pdf', ['type' => $type, 'id' => $id]) }}">
+    <form id="download-form" method="POST" target="_blank" action="{{ route('export.pdf', ['type' => $type, 'id' => $id]) }}">
         @csrf
         <input type="hidden" name="summary" id="summary-input" value="">
         <button type="submit" id="download-btn" disabled
