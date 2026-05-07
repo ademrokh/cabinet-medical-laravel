@@ -95,7 +95,7 @@
             <h3 class="text-xl font-bold mb-2">Planning IA</h3>
             <p class="opacity-90">Generer des plannings optimises</p>
         </a>
-        <a href="#" class="bg-purple-600 text-white rounded-lg p-6 hover:bg-purple-700 transition">
+        <a href="{{ route('admin.patients.index') }}" class="bg-purple-600 text-white rounded-lg p-6 hover:bg-purple-700 transition">
             <h3 class="text-xl font-bold mb-2">Patients</h3>
             <p class="opacity-90">Gérer les patients</p>
         </a>

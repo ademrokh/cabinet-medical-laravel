@@ -5,6 +5,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalDocumentController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminPatientController;
 use App\Http\Controllers\PdfExportController;
 use App\Http\Controllers\PlanningController;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::middleware('admin')->group(function () {
         Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::resource('admin/patients', AdminPatientController::class, ['as' => 'admin'])->only(['index', 'edit', 'update', 'destroy']);
         Route::resource('admin/doctors', DoctorController::class, ['as' => 'admin'])->except('show');
         Route::resource('admin/appointments', AppointmentController::class, ['as' => 'admin'])->except('show');
         Route::resource('admin/specialties', 'SpecialtyController', ['as' => 'admin']);

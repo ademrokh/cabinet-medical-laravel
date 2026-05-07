@@ -9,6 +9,27 @@ use Illuminate\Http\Request;
 class AppointmentController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        if ($request->routeIs('admin.appointments.*')) {
+            $query = Appointment::with('patient', 'doctor.user', 'doctor.specialty')
+                ->orderByDesc('appointment_date_time');
+
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+
+            $appointments = $query->paginate(15)->withQueryString();
+            $status = $request->get('status', '');
+
+            return view('admin.appointments.index', compact('appointments', 'status'));
+        }
+
+        abort(404);
+    }
+    /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
@@ -49,6 +70,26 @@ class AppointmentController extends Controller
     {
         $this->authorize('view', $appointment);
         return view('appointments.show', compact('appointment'));
+    }
+
+    /**
+     * Show the form for editing the specified resource (admin).
+     */
+    public function edit(Request $request, Appointment $appointment)
+    {
+        if (!$request->routeIs('admin.appointments.*')) {
+            abort(404);
+        }
+
+        $this->authorize('update', $appointment);
+
+        $patients = \App\Models\User::where('role', 'patient')
+            ->orderBy('name')
+            ->get();
+
+        $doctors = Doctor::with('user', 'specialty')->orderBy('id')->get();
+
+        return view('admin.appointments.edit', compact('appointment', 'patients', 'doctors'));
     }
 
     /**
@@ -107,10 +148,46 @@ class AppointmentController extends Controller
     }
 
     /**
+     * Update the specified resource in storage (admin).
+     */
+    public function update(Request $request, Appointment $appointment)
+    {
+        if (!$request->routeIs('admin.appointments.*')) {
+            abort(404);
+        }
+
+        $this->authorize('update', $appointment);
+
+        $validated = $request->validate([
+            'patient_id' => ['required', 'exists:users,id'],
+            'doctor_id' => ['required', 'exists:doctors,id'],
+            'appointment_date_time' => ['required', 'date'],
+            'reason' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'in:scheduled,confirmed,completed,cancelled,pending'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $appointment->update($validated);
+
+        return redirect()
+            ->route('admin.appointments.index')
+            ->with('success', 'Appointment updated successfully.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Appointment $appointment)
+    public function destroy(Request $request, Appointment $appointment)
     {
+        if ($request->routeIs('admin.appointments.*')) {
+            $this->authorize('delete', $appointment);
+            $appointment->delete();
+
+            return redirect()
+                ->route('admin.appointments.index')
+                ->with('success', 'Appointment deleted successfully.');
+        }
+
         $this->authorize('delete', $appointment);
 
         if ($appointment->appointment_date_time < now()->addHours(24)) {

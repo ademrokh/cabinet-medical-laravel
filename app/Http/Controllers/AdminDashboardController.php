@@ -58,4 +58,5 @@ class AdminDashboardController extends Controller
 
         return view('doctor.dashboard', compact('upcomingCount', 'completedCount', 'upcomingAppointments'));
     }
+
 }
